@@ -1,0 +1,1284 @@
+/* ───────────────────────────────────────────────
+   VaultPilot — Modern & Minimal UI
+   ─────────────────────────────────────────────── */
+
+/* === Base reset === */
+
+.vaultpilot-dashboard,
+.vaultpilot-settings,
+.vaultpilot-picker-modal {
+	color: var(--text-normal);
+}
+
+/* Hide raw properties when the note-panel is active */
+
+body.vaultpilot-active .metadata-property[data-property-key="status"],
+body.vaultpilot-active .metadata-property[data-property-key="priority"],
+body.vaultpilot-active .metadata-property[data-property-key="level"] {
+	display: none;
+}
+
+body.vaultpilot-active .vaultpilot-hidden-properties-container {
+	display: none;
+}
+
+/* ─── Dashboard layout ─── */
+
+.vaultpilot-dashboard {
+	container-type: inline-size;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	height: 100%;
+	min-height: 0;
+	padding: 20px;
+}
+
+.vaultpilot-dashboard-header {
+	align-items: baseline;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px 16px;
+	justify-content: space-between;
+}
+
+.vaultpilot-dashboard-header h2 {
+	font-size: var(--font-ui-large);
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	line-height: 1.3;
+	margin: 0;
+}
+
+.vaultpilot-dashboard-summary {
+	color: var(--text-faint);
+	font-size: var(--font-ui-small);
+	font-weight: 500;
+}
+
+/* ─── Toolbar ─── */
+
+.vaultpilot-toolbar {
+	align-items: end;
+	display: grid;
+	gap: 10px;
+	grid-template-columns: minmax(180px, 2fr) auto repeat(6, minmax(120px, 1fr)) auto;
+}
+
+.vaultpilot-control {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	min-width: 0;
+}
+
+.vaultpilot-control.wide {
+	min-width: 180px;
+}
+
+.vaultpilot-control label,
+.vaultpilot-note-panel-control label {
+	color: var(--text-faint);
+	font-size: var(--font-ui-smaller);
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+}
+
+.vaultpilot-control input,
+.vaultpilot-control select,
+.vaultpilot-select {
+	background: var(--background-primary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 8px;
+	color: var(--text-normal);
+	font-size: var(--font-ui-small);
+	height: 34px;
+	min-width: 0;
+	padding: 0 10px;
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+	width: 100%;
+}
+
+.vaultpilot-control input:focus,
+.vaultpilot-control select:focus,
+.vaultpilot-select:focus {
+	border-color: var(--interactive-accent);
+	box-shadow: 0 0 0 2px color-mix(in srgb, var(--interactive-accent) 18%, transparent);
+	outline: none;
+}
+
+/* ─── Buttons ─── */
+
+.vaultpilot-icon-button,
+.vaultpilot-link-button,
+.vaultpilot-picker-option {
+	background: transparent;
+	border: 1px solid transparent;
+	color: var(--text-normal);
+	cursor: pointer;
+	font: inherit;
+	transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+}
+
+.vaultpilot-icon-button {
+	align-items: center;
+	border-radius: 8px;
+	display: inline-flex;
+	height: 34px;
+	justify-content: center;
+	width: 34px;
+}
+
+.vaultpilot-search-button {
+	align-items: center;
+	background: var(--interactive-accent);
+	border: 1px solid var(--interactive-accent);
+	border-radius: 8px;
+	color: var(--text-on-accent);
+	cursor: pointer;
+	display: inline-flex;
+	font-size: var(--font-ui-small);
+	font-weight: 700;
+	gap: 6px;
+	height: 34px;
+	justify-content: center;
+	line-height: 1;
+	padding: 0 12px;
+	transition: background 0.12s ease, border-color 0.12s ease, transform 0.12s ease;
+	white-space: nowrap;
+}
+
+.vaultpilot-search-button:hover,
+.vaultpilot-search-button:focus-visible {
+	background: var(--interactive-accent-hover);
+	border-color: var(--interactive-accent-hover);
+	outline: none;
+}
+
+.vaultpilot-search-button:active {
+	transform: scale(0.97);
+}
+
+.vaultpilot-icon-button:hover,
+.vaultpilot-link-button:hover,
+.vaultpilot-picker-option:hover {
+	background: var(--background-modifier-hover);
+	border-color: var(--background-modifier-border);
+}
+
+.vaultpilot-icon-button:active {
+	transform: scale(0.95);
+}
+
+.vaultpilot-link-button {
+	border-radius: 6px;
+	color: var(--link-color);
+	font-weight: 600;
+	max-width: 220px;
+	overflow-wrap: anywhere;
+	padding: 2px 4px;
+	text-align: left;
+}
+
+.vaultpilot-link-button:hover {
+	color: var(--link-color-hover, var(--link-color));
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+/* ─── Card ─── */
+
+.vaultpilot-card {
+	background: var(--background-primary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 10px;
+	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+}
+
+/* ─── Table ─── */
+
+.vaultpilot-table-wrap {
+	flex: 1;
+	min-height: 0;
+	overflow: auto;
+}
+
+.vaultpilot-table {
+	border-collapse: collapse;
+	font-size: var(--font-ui-smaller);
+	min-width: 700px;
+	width: 100%;
+}
+
+.vaultpilot-table th,
+.vaultpilot-table td {
+	border-bottom: 1px solid color-mix(in srgb, var(--background-modifier-border) 60%, transparent);
+	padding: 6px 8px;
+	text-align: left;
+	vertical-align: middle;
+}
+
+.vaultpilot-table th {
+	background: var(--background-secondary);
+	color: var(--text-faint);
+	font-size: var(--font-ui-smaller);
+	font-weight: 700;
+	letter-spacing: 0.03em;
+	position: sticky;
+	text-transform: uppercase;
+	top: 0;
+	z-index: 1;
+}
+
+.vaultpilot-table tbody tr {
+	transition: background 0.1s ease;
+}
+
+.vaultpilot-table tbody tr:hover {
+	background: color-mix(in srgb, var(--background-modifier-hover) 50%, transparent);
+}
+
+.vaultpilot-table tbody tr:last-child td {
+	border-bottom: none;
+}
+
+.vaultpilot-cell-edit {
+	align-items: center;
+	display: flex;
+	gap: 0;
+}
+
+.vaultpilot-actions-cell {
+	white-space: nowrap;
+}
+
+.vaultpilot-actions-cell .vaultpilot-icon-button + .vaultpilot-icon-button {
+	margin-left: 4px;
+}
+
+.vaultpilot-action-button {
+	background: transparent;
+	border-color: transparent;
+	border-radius: 6px;
+	color: var(--text-muted);
+	height: 24px;
+	padding: 0;
+	width: 24px;
+}
+
+.vaultpilot-action-button:hover,
+.vaultpilot-action-button:focus-visible {
+	background: var(--background-modifier-hover);
+	border-color: transparent;
+	color: var(--text-normal);
+}
+
+.vaultpilot-action-button .svg-icon {
+	display: block;
+	height: 16px;
+	stroke-width: 2.25;
+	width: 16px;
+}
+
+.vaultpilot-dashboard .vaultpilot-icon-button {
+	height: 24px;
+	width: 24px;
+}
+
+.vaultpilot-dashboard .vaultpilot-badge {
+	font-size: var(--font-ui-smaller);
+	min-height: 20px;
+	padding: 1px 7px;
+}
+
+.vaultpilot-badge.vaultpilot-priority {
+	padding-left: 10px;
+}
+
+.vaultpilot-dashboard .vaultpilot-empty {
+	padding: 18px 16px;
+}
+
+/* ─── Badge ─── */
+
+.vaultpilot-badge {
+	--vaultpilot-badge-color: var(--text-muted);
+	align-items: center;
+	background: color-mix(in srgb, var(--background-modifier-hover) 60%, transparent);
+	border: 1px solid color-mix(in srgb, var(--background-modifier-border) 50%, transparent);
+	border-radius: 6px;
+	color: var(--text-normal);
+	display: inline-flex;
+	font-size: var(--font-ui-smaller);
+	font-weight: 600;
+	gap: 4px;
+	justify-content: center;
+	line-height: 1.2;
+	max-width: 100%;
+	min-height: 24px;
+	overflow: hidden;
+	padding: 3px 10px;
+	text-overflow: ellipsis;
+	transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease,
+		box-shadow 0.15s ease;
+	white-space: nowrap;
+}
+
+body.vaultpilot-badges-enabled .vaultpilot-badge {
+	background: color-mix(
+		in srgb,
+		var(--vaultpilot-badge-color) 12%,
+		var(--background-primary)
+	);
+	border-color: color-mix(
+		in srgb,
+		var(--vaultpilot-badge-color) 24%,
+		transparent
+	);
+	color: color-mix(in srgb, var(--vaultpilot-badge-color) 80%, var(--text-normal));
+}
+
+/* ─── Empty state ─── */
+
+.vaultpilot-empty {
+	color: var(--text-faint);
+	font-size: var(--font-ui-small);
+	padding: 40px 24px;
+	text-align: center;
+}
+
+/* ─── Note panel (inline, above the editor) ─── */
+
+.vaultpilot-note-panel {
+	background: transparent;
+	border: 0;
+	border-radius: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+	margin: 0 0 6px;
+	padding: 4px 0;
+}
+
+.vaultpilot-inline-note-panel {
+	align-self: stretch;
+	box-sizing: border-box;
+	container-type: inline-size;
+	flex-shrink: 0;
+	margin: 4px 12px 6px;
+	position: relative;
+	width: calc(100% - 24px);
+	z-index: 2;
+}
+
+.vaultpilot-note-panel-sticky-corner {
+	align-self: flex-end;
+	backdrop-filter: blur(12px);
+	background: color-mix(in srgb, var(--background-primary) 88%, transparent);
+	border: 1px solid color-mix(in srgb, var(--background-modifier-border) 72%, transparent);
+	border-radius: 10px;
+	box-shadow: 0 8px 26px color-mix(in srgb, var(--background-modifier-box-shadow) 22%, transparent);
+	margin: 8px 12px 0 auto;
+	max-width: min(420px, calc(100% - 24px));
+	padding: 4px;
+	position: sticky;
+	right: 12px;
+	top: 10px;
+	width: max-content;
+	z-index: 20;
+}
+
+.vaultpilot-note-panel-sticky-corner .vaultpilot-note-panel-controls {
+	align-items: stretch;
+	flex-wrap: nowrap;
+	gap: 3px;
+	justify-content: flex-end;
+}
+
+.vaultpilot-note-panel-sticky-corner .vaultpilot-note-panel-control label,
+.vaultpilot-note-panel-sticky-corner .vaultpilot-priority-kicker {
+	display: none;
+}
+
+.vaultpilot-note-panel-sticky-corner .vaultpilot-note-panel-control {
+	align-items: center;
+	background: color-mix(in srgb, var(--background-secondary) 68%, transparent);
+	border: 1px solid color-mix(in srgb, var(--background-modifier-border) 60%, transparent);
+	border-radius: 7px;
+	min-height: 28px;
+	padding: 2px;
+}
+
+.vaultpilot-note-panel-sticky-corner .vaultpilot-priority-panel {
+	background: color-mix(in srgb, var(--vaultpilot-priority-color) 8%, var(--background-secondary));
+	border: 1px solid color-mix(in srgb, var(--vaultpilot-priority-color) 22%, var(--background-modifier-border));
+	border-radius: 7px;
+	display: flex;
+	gap: 7px;
+	min-height: 28px;
+	padding: 2px 7px;
+}
+
+.vaultpilot-note-panel-sticky-corner .vaultpilot-priority-meter {
+	align-self: center;
+	width: 34px;
+}
+
+.vaultpilot-note-panel-sticky-corner .vaultpilot-badge {
+	background: transparent;
+	border: 0;
+	border-radius: 6px;
+	font-size: var(--font-ui-smaller);
+	line-height: 1;
+	max-width: 135px;
+	min-height: 22px;
+	padding: 0 7px;
+	white-space: nowrap;
+}
+
+.vaultpilot-note-panel-title {
+	color: var(--text-faint);
+	font-size: var(--font-ui-smaller);
+	font-weight: 700;
+	letter-spacing: 0.03em;
+	text-transform: uppercase;
+}
+
+.vaultpilot-note-panel-controls {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+/* ─── Priority panel ─── */
+
+.vaultpilot-priority-panel {
+	--vaultpilot-priority-color: var(--interactive-accent);
+	align-items: center;
+	background: color-mix(
+		in srgb,
+		var(--vaultpilot-priority-color) 5%,
+		transparent
+	);
+	border: 1px solid
+		color-mix(
+			in srgb,
+			var(--vaultpilot-priority-color) 28%,
+			transparent
+		);
+	border-left: 3px solid var(--vaultpilot-priority-color);
+	border-radius: 8px;
+	display: grid;
+	gap: 6px;
+	grid-template-columns: auto 44px;
+	min-height: 28px;
+	padding: 4px 10px 4px 8px;
+	transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.vaultpilot-priority-summary {
+	align-items: center;
+	display: flex;
+	gap: 6px;
+	min-width: 0;
+}
+
+/* ─── Badge button ─── */
+
+button.vaultpilot-badge-button {
+	appearance: none;
+	align-items: center;
+	background: transparent !important;
+	border: 0 !important;
+	border-radius: 6px;
+	box-shadow: none !important;
+	color: inherit;
+	cursor: pointer;
+	display: inline-flex;
+	font: inherit;
+	height: auto;
+	justify-content: center;
+	line-height: 1;
+	margin: 0;
+	min-height: 0;
+	min-width: 0;
+	padding: 0;
+	vertical-align: middle;
+	width: auto;
+}
+
+button.vaultpilot-badge-button:hover,
+button.vaultpilot-badge-button:focus,
+button.vaultpilot-badge-button:focus-visible,
+button.vaultpilot-badge-button:active {
+	background: transparent !important;
+	box-shadow: none !important;
+	outline: none;
+}
+
+.vaultpilot-badge-button:hover .vaultpilot-badge,
+.vaultpilot-badge-button:focus-visible .vaultpilot-badge {
+	background: color-mix(in srgb, var(--vaultpilot-badge-color) 10%, transparent);
+	border-color: color-mix(in srgb, var(--vaultpilot-badge-color) 34%, transparent);
+	box-shadow: 0 0 0 2px color-mix(in srgb, var(--vaultpilot-badge-color) 12%, transparent);
+}
+
+.vaultpilot-priority-panel .vaultpilot-badge-button:hover .vaultpilot-badge,
+.vaultpilot-priority-panel .vaultpilot-badge-button:focus-visible .vaultpilot-badge {
+	background: color-mix(
+		in srgb,
+		var(--vaultpilot-priority-color) 10%,
+		transparent
+	);
+	border-color: transparent;
+}
+
+/* Badge size overrides inside panels */
+
+.vaultpilot-note-panel .vaultpilot-badge {
+	font-size: var(--font-ui-smaller);
+	min-height: 22px;
+	padding: 2px 8px;
+}
+
+.vaultpilot-priority-panel .vaultpilot-badge {
+	background: transparent;
+	border-color: transparent;
+	color: color-mix(in srgb, var(--vaultpilot-priority-color) 82%, var(--text-normal));
+	padding-left: 0;
+}
+
+.vaultpilot-note-panel-sticky-corner .vaultpilot-priority-panel .vaultpilot-badge,
+.vaultpilot-note-panel-sticky-corner .vaultpilot-note-panel-control .vaultpilot-badge {
+	background: transparent;
+	border: 0;
+	border-radius: 6px;
+	font-size: var(--font-ui-smaller);
+	line-height: 1;
+	max-width: 135px;
+	min-height: 22px;
+	padding: 0 7px;
+	white-space: nowrap;
+}
+
+.vaultpilot-note-panel-sticky-corner .vaultpilot-priority-panel .vaultpilot-badge {
+	color: color-mix(in srgb, var(--vaultpilot-priority-color) 82%, var(--text-normal));
+}
+
+.vaultpilot-priority-panel .vaultpilot-badge.vaultpilot-priority,
+.vaultpilot-badge.vaultpilot-priority {
+	padding-left: 10px;
+}
+
+/* ─── Priority kicker & meter ─── */
+
+.vaultpilot-priority-kicker {
+	color: var(--text-faint);
+	font-size: var(--font-ui-smaller);
+	font-weight: 700;
+	line-height: 1.1;
+}
+
+.vaultpilot-priority-meter {
+	--vaultpilot-priority-segment-count: 4;
+	display: grid;
+	gap: 3px;
+	grid-template-columns: repeat(
+		var(--vaultpilot-priority-segment-count),
+		minmax(7px, 1fr)
+	);
+	width: 44px;
+}
+
+.vaultpilot-priority-segment {
+	background: color-mix(in srgb, var(--background-modifier-border) 70%, transparent);
+	border-radius: 999px;
+	display: block;
+	height: 4px;
+	overflow: hidden;
+	transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.vaultpilot-priority-segment.is-active {
+	background: var(--vaultpilot-priority-color);
+	box-shadow: 0 0 6px 0
+		color-mix(
+			in srgb,
+			var(--vaultpilot-priority-color) 30%,
+			transparent
+		);
+}
+
+/* ─── Note panel control (inline pill) ─── */
+
+.vaultpilot-note-panel-control {
+	align-items: center;
+	background: color-mix(in srgb, var(--background-secondary) 70%, transparent);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 8px;
+	display: inline-flex;
+	gap: 6px;
+	min-width: 0;
+	padding: 3px 8px;
+	transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+.vaultpilot-note-panel-control:hover {
+	background: var(--background-secondary);
+}
+
+.vaultpilot-note-panel-control label {
+	line-height: 1;
+}
+
+.vaultpilot-note-panel-row {
+	align-items: center;
+	display: flex;
+}
+
+/* ─── Picker modal ─── */
+
+.vaultpilot-picker-list {
+	display: grid;
+	gap: 6px;
+	margin-top: 12px;
+}
+
+.vaultpilot-picker-option {
+	align-items: center;
+	border-radius: 8px;
+	display: flex;
+	gap: 10px;
+	padding: 10px;
+	text-align: left;
+	transition: background 0.1s ease;
+}
+
+/* ─── Settings ─── */
+
+.vaultpilot-settings-list {
+	display: grid;
+	gap: 8px;
+	margin: 8px 0 18px;
+}
+
+.vaultpilot-settings-option {
+	background: var(--background-secondary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 10px;
+	padding: 4px 10px;
+	transition: border-color 0.12s ease;
+}
+
+.vaultpilot-settings-option:hover {
+	border-color: color-mix(in srgb, var(--interactive-accent) 30%, var(--background-modifier-border));
+}
+
+.vaultpilot-settings-option .setting-item {
+	border: 0;
+	padding: 8px 0;
+}
+
+/* ─── Responsive ─── */
+
+@media (max-width: 1200px) {
+	.vaultpilot-dashboard {
+		padding: 16px;
+	}
+
+	.vaultpilot-toolbar {
+		grid-template-columns: repeat(3, minmax(140px, 1fr));
+	}
+}
+
+@media (max-width: 900px) {
+	.vaultpilot-dashboard {
+		gap: 12px;
+		padding: 14px;
+	}
+
+	.vaultpilot-dashboard-header {
+		align-items: flex-start;
+		flex-direction: column;
+		gap: 2px;
+	}
+
+	.vaultpilot-toolbar {
+		gap: 8px;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.vaultpilot-control.wide {
+		grid-column: 1 / -1;
+		min-width: 0;
+	}
+
+	.vaultpilot-toolbar > .vaultpilot-icon-button,
+	.vaultpilot-search-button {
+		align-self: end;
+		justify-self: start;
+	}
+
+	.vaultpilot-table {
+		min-width: 620px;
+	}
+
+	.vaultpilot-link-button {
+		max-width: 180px;
+	}
+}
+
+@media (max-width: 720px) {
+	.vaultpilot-dashboard {
+		padding: 12px;
+	}
+
+	.vaultpilot-toolbar {
+		grid-template-columns: 1fr;
+	}
+
+	.vaultpilot-toolbar > .vaultpilot-icon-button,
+	.vaultpilot-search-button {
+		justify-self: end;
+	}
+
+	.vaultpilot-table-wrap {
+		background: transparent;
+		border: 0;
+		box-shadow: none;
+		overflow: visible;
+	}
+
+	.vaultpilot-table,
+	.vaultpilot-table thead,
+	.vaultpilot-table tbody,
+	.vaultpilot-table tr,
+	.vaultpilot-table td {
+		display: block;
+	}
+
+	.vaultpilot-table {
+		border-collapse: separate;
+		border-spacing: 0;
+		min-width: 0;
+		width: 100%;
+	}
+
+	.vaultpilot-table thead {
+		display: none;
+	}
+
+	.vaultpilot-table tbody {
+		display: grid;
+		gap: 10px;
+	}
+
+	.vaultpilot-table tbody tr {
+		background: var(--background-primary);
+		border: 1px solid var(--background-modifier-border);
+		border-radius: 10px;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+		display: grid;
+		gap: 0;
+		overflow: hidden;
+		padding: 8px 10px;
+	}
+
+	.vaultpilot-table tbody tr:hover {
+		background: var(--background-primary);
+		border-color: color-mix(in srgb, var(--interactive-accent) 24%, var(--background-modifier-border));
+	}
+
+	.vaultpilot-table td {
+		align-items: center;
+		border-bottom: 0;
+		display: flex;
+		gap: 10px;
+		justify-content: space-between;
+		min-width: 0;
+		padding: 6px 0;
+	}
+
+	.vaultpilot-table td:first-child {
+		border-bottom: 1px solid color-mix(in srgb, var(--background-modifier-border) 58%, transparent);
+		padding-bottom: 9px;
+	}
+
+	.vaultpilot-table td:nth-child(n + 2)::before {
+		color: var(--text-faint);
+		content: '';
+		flex: 0 0 auto;
+		font-size: var(--font-ui-smaller);
+		font-weight: 700;
+		text-transform: uppercase;
+	}
+
+	.vaultpilot-table td:nth-child(2)::before {
+		content: 'Status';
+	}
+
+	.vaultpilot-table td:nth-child(3)::before {
+		content: 'Priority';
+	}
+
+	.vaultpilot-table td:nth-child(4)::before {
+		content: 'Level';
+	}
+
+	.vaultpilot-table td:nth-child(5)::before {
+		content: 'Actions';
+	}
+
+	.vaultpilot-link-button {
+		max-width: 100%;
+		padding-left: 0;
+		width: 100%;
+	}
+
+	.vaultpilot-actions-cell {
+		justify-content: space-between;
+	}
+
+	.vaultpilot-priority-panel {
+		min-height: 0;
+	}
+
+	.vaultpilot-note-panel-sticky-corner {
+		margin-right: 8px;
+		max-width: calc(100% - 16px);
+		right: 8px;
+		width: calc(100% - 16px);
+	}
+
+	.vaultpilot-note-panel-sticky-corner .vaultpilot-note-panel-controls {
+		flex-wrap: wrap;
+	}
+
+	.vaultpilot-note-panel-top .vaultpilot-note-panel-controls {
+		align-items: stretch;
+	}
+
+	.vaultpilot-note-panel-top .vaultpilot-note-panel-control {
+		justify-content: space-between;
+	}
+
+	.vaultpilot-note-panel-top .vaultpilot-priority-panel {
+		grid-template-columns: minmax(0, 1fr) 44px;
+	}
+
+	.vaultpilot-note-panel-sticky-corner .vaultpilot-badge,
+	.vaultpilot-note-panel-sticky-corner .vaultpilot-priority-panel .vaultpilot-badge,
+	.vaultpilot-note-panel-sticky-corner .vaultpilot-note-panel-control .vaultpilot-badge {
+		max-width: 112px;
+	}
+
+	.vaultpilot-cell-edit {
+		justify-content: flex-end;
+		min-width: 0;
+	}
+}
+
+@media (max-width: 480px) {
+	.vaultpilot-dashboard {
+		padding: 10px;
+	}
+
+	.vaultpilot-dashboard-header h2 {
+		font-size: var(--font-ui-medium);
+	}
+
+	.vaultpilot-control input,
+	.vaultpilot-control select,
+	.vaultpilot-select {
+		height: 32px;
+	}
+
+	.vaultpilot-table tbody tr {
+		border-radius: 8px;
+		padding: 7px 9px;
+	}
+
+	.vaultpilot-note-panel-sticky-corner {
+		margin-left: 6px;
+		margin-right: 6px;
+		max-width: calc(100% - 12px);
+		padding: 3px;
+		right: 6px;
+		top: 6px;
+		width: calc(100% - 12px);
+	}
+
+	.vaultpilot-note-panel-sticky-corner .vaultpilot-note-panel-controls {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.vaultpilot-note-panel-sticky-corner .vaultpilot-priority-panel {
+		grid-column: 1 / -1;
+		justify-content: space-between;
+	}
+
+	.vaultpilot-note-panel-sticky-corner .vaultpilot-note-panel-control {
+		justify-content: center;
+	}
+
+	.vaultpilot-note-panel-sticky-corner .vaultpilot-badge,
+	.vaultpilot-note-panel-sticky-corner .vaultpilot-priority-panel .vaultpilot-badge,
+	.vaultpilot-note-panel-sticky-corner .vaultpilot-note-panel-control .vaultpilot-badge {
+		max-width: 100%;
+		width: 100%;
+	}
+
+	.vaultpilot-note-panel-top .vaultpilot-note-panel-controls {
+		display: grid;
+		grid-template-columns: 1fr;
+	}
+
+	.vaultpilot-note-panel-top .vaultpilot-note-panel-control,
+	.vaultpilot-note-panel-top .vaultpilot-priority-panel {
+		width: 100%;
+	}
+}
+
+@container (max-width: 900px) {
+	.vaultpilot-dashboard-header {
+		align-items: flex-start;
+		flex-direction: column;
+		gap: 2px;
+	}
+
+	.vaultpilot-toolbar {
+		gap: 8px;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.vaultpilot-control.wide {
+		grid-column: 1 / -1;
+		min-width: 0;
+	}
+
+	.vaultpilot-toolbar > .vaultpilot-icon-button,
+	.vaultpilot-search-button {
+		align-self: end;
+		justify-self: start;
+	}
+
+	.vaultpilot-table {
+		min-width: 620px;
+	}
+
+	.vaultpilot-link-button {
+		max-width: 180px;
+	}
+}
+
+@container (max-width: 720px) {
+	.vaultpilot-toolbar {
+		grid-template-columns: 1fr;
+	}
+
+	.vaultpilot-toolbar > .vaultpilot-icon-button,
+	.vaultpilot-search-button {
+		justify-self: end;
+	}
+
+	.vaultpilot-table-wrap {
+		background: transparent;
+		border: 0;
+		box-shadow: none;
+		overflow: visible;
+	}
+
+	.vaultpilot-table,
+	.vaultpilot-table thead,
+	.vaultpilot-table tbody,
+	.vaultpilot-table tr,
+	.vaultpilot-table td {
+		display: block;
+	}
+
+	.vaultpilot-table {
+		border-collapse: separate;
+		border-spacing: 0;
+		min-width: 0;
+		width: 100%;
+	}
+
+	.vaultpilot-table thead {
+		display: none;
+	}
+
+	.vaultpilot-table tbody {
+		display: grid;
+		gap: 10px;
+	}
+
+	.vaultpilot-table tbody tr {
+		background: var(--background-primary);
+		border: 1px solid var(--background-modifier-border);
+		border-radius: 10px;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+		display: grid;
+		gap: 0;
+		overflow: hidden;
+		padding: 8px 10px;
+	}
+
+	.vaultpilot-table tbody tr:hover {
+		background: var(--background-primary);
+		border-color: color-mix(in srgb, var(--interactive-accent) 24%, var(--background-modifier-border));
+	}
+
+	.vaultpilot-table td {
+		align-items: center;
+		border-bottom: 0;
+		display: flex;
+		gap: 10px;
+		justify-content: space-between;
+		min-width: 0;
+		padding: 6px 0;
+	}
+
+	.vaultpilot-table td:first-child {
+		border-bottom: 1px solid color-mix(in srgb, var(--background-modifier-border) 58%, transparent);
+		padding-bottom: 9px;
+	}
+
+	.vaultpilot-table td:nth-child(n + 2)::before {
+		color: var(--text-faint);
+		content: '';
+		flex: 0 0 auto;
+		font-size: var(--font-ui-smaller);
+		font-weight: 700;
+		text-transform: uppercase;
+	}
+
+	.vaultpilot-table td:nth-child(2)::before {
+		content: 'Status';
+	}
+
+	.vaultpilot-table td:nth-child(3)::before {
+		content: 'Priority';
+	}
+
+	.vaultpilot-table td:nth-child(4)::before {
+		content: 'Level';
+	}
+
+	.vaultpilot-table td:nth-child(5)::before {
+		content: 'Actions';
+	}
+
+	.vaultpilot-link-button {
+		max-width: 100%;
+		padding-left: 0;
+		width: 100%;
+	}
+
+	.vaultpilot-actions-cell {
+		justify-content: space-between;
+	}
+
+	.vaultpilot-cell-edit {
+		justify-content: flex-end;
+		min-width: 0;
+	}
+}
+
+@container (max-width: 480px) {
+	.vaultpilot-table tbody tr {
+		border-radius: 8px;
+		padding: 7px 9px;
+	}
+
+	.vaultpilot-note-panel-sticky-corner .vaultpilot-note-panel-controls {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.vaultpilot-note-panel-sticky-corner .vaultpilot-priority-panel {
+		grid-column: 1 / -1;
+		justify-content: space-between;
+	}
+
+	.vaultpilot-note-panel-sticky-corner .vaultpilot-note-panel-control {
+		justify-content: center;
+	}
+
+	.vaultpilot-note-panel-sticky-corner .vaultpilot-badge,
+	.vaultpilot-note-panel-sticky-corner .vaultpilot-priority-panel .vaultpilot-badge,
+	.vaultpilot-note-panel-sticky-corner .vaultpilot-note-panel-control .vaultpilot-badge {
+		max-width: 100%;
+		width: 100%;
+	}
+
+	.vaultpilot-note-panel-top .vaultpilot-note-panel-controls {
+		display: grid;
+		grid-template-columns: 1fr;
+	}
+
+	.vaultpilot-note-panel-top .vaultpilot-note-panel-control,
+	.vaultpilot-note-panel-top .vaultpilot-priority-panel {
+		width: 100%;
+	}
+}
+
+@media (max-width: 720px) {
+	.vaultpilot-dashboard .vaultpilot-table-wrap {
+		background: var(--background-primary);
+		border: 1px solid var(--background-modifier-border);
+		border-radius: 8px;
+		box-shadow: none;
+		overflow: auto;
+	}
+
+	.vaultpilot-dashboard .vaultpilot-table {
+		border-collapse: collapse;
+		border-spacing: 0;
+		display: table;
+		min-width: 560px;
+		table-layout: fixed;
+		width: 100%;
+	}
+
+	.vaultpilot-dashboard .vaultpilot-table thead {
+		display: table-header-group;
+	}
+
+	.vaultpilot-dashboard .vaultpilot-table tbody {
+		display: table-row-group;
+	}
+
+	.vaultpilot-dashboard .vaultpilot-table tr {
+		background: transparent;
+		border: 0;
+		border-radius: 0;
+		box-shadow: none;
+		display: table-row;
+		padding: 0;
+	}
+
+	.vaultpilot-dashboard .vaultpilot-table th,
+	.vaultpilot-dashboard .vaultpilot-table td {
+		border-bottom: 1px solid color-mix(in srgb, var(--background-modifier-border) 60%, transparent);
+		display: table-cell;
+		padding: 4px 6px;
+		vertical-align: middle;
+	}
+
+	.vaultpilot-dashboard .vaultpilot-table td::before {
+		content: none;
+		display: none;
+	}
+
+	.vaultpilot-dashboard .vaultpilot-table th:nth-child(1),
+	.vaultpilot-dashboard .vaultpilot-table td:nth-child(1) {
+		width: 34%;
+	}
+
+	.vaultpilot-dashboard .vaultpilot-table th:nth-child(2),
+	.vaultpilot-dashboard .vaultpilot-table td:nth-child(2) {
+		width: 20%;
+	}
+
+	.vaultpilot-dashboard .vaultpilot-table th:nth-child(3),
+	.vaultpilot-dashboard .vaultpilot-table td:nth-child(3),
+	.vaultpilot-dashboard .vaultpilot-table th:nth-child(4),
+	.vaultpilot-dashboard .vaultpilot-table td:nth-child(4) {
+		width: 17%;
+	}
+
+	.vaultpilot-dashboard .vaultpilot-table th:nth-child(5),
+	.vaultpilot-dashboard .vaultpilot-table td:nth-child(5) {
+		width: 12%;
+	}
+
+	.vaultpilot-dashboard .vaultpilot-link-button {
+		max-width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		width: auto;
+	}
+}
+
+@container (max-width: 720px) {
+	.vaultpilot-dashboard .vaultpilot-table-wrap {
+		background: var(--background-primary);
+		border: 1px solid var(--background-modifier-border);
+		border-radius: 8px;
+		box-shadow: none;
+		overflow: auto;
+	}
+
+	.vaultpilot-dashboard .vaultpilot-table {
+		border-collapse: collapse;
+		border-spacing: 0;
+		display: table;
+		min-width: 560px;
+		table-layout: fixed;
+		width: 100%;
+	}
+
+	.vaultpilot-dashboard .vaultpilot-table thead {
+		display: table-header-group;
+	}
+
+	.vaultpilot-dashboard .vaultpilot-table tbody {
+		display: table-row-group;
+	}
+
+	.vaultpilot-dashboard .vaultpilot-table tr {
+		background: transparent;
+		border: 0;
+		border-radius: 0;
+		box-shadow: none;
+		display: table-row;
+		padding: 0;
+	}
+
+	.vaultpilot-dashboard .vaultpilot-table th,
+	.vaultpilot-dashboard .vaultpilot-table td {
+		border-bottom: 1px solid color-mix(in srgb, var(--background-modifier-border) 60%, transparent);
+		display: table-cell;
+		padding: 4px 6px;
+		vertical-align: middle;
+	}
+
+	.vaultpilot-dashboard .vaultpilot-table td::before {
+		content: none;
+		display: none;
+	}
+
+	.vaultpilot-dashboard .vaultpilot-table th:nth-child(1),
+	.vaultpilot-dashboard .vaultpilot-table td:nth-child(1) {
+		width: 34%;
+	}
+
+	.vaultpilot-dashboard .vaultpilot-table th:nth-child(2),
+	.vaultpilot-dashboard .vaultpilot-table td:nth-child(2) {
+		width: 20%;
+	}
+
+	.vaultpilot-dashboard .vaultpilot-table th:nth-child(3),
+	.vaultpilot-dashboard .vaultpilot-table td:nth-child(3),
+	.vaultpilot-dashboard .vaultpilot-table th:nth-child(4),
+	.vaultpilot-dashboard .vaultpilot-table td:nth-child(4) {
+		width: 17%;
+	}
+
+	.vaultpilot-dashboard .vaultpilot-table th:nth-child(5),
+	.vaultpilot-dashboard .vaultpilot-table td:nth-child(5) {
+		width: 12%;
+	}
+
+	.vaultpilot-dashboard .vaultpilot-link-button {
+		max-width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		width: auto;
+	}
+}

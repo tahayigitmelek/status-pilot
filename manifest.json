@@ -1,0 +1,10 @@
+{
+	"id": "vault-pilot",
+	"name": "Vault Pilot",
+	"version": "1.0.0",
+	"minAppVersion": "1.11.4",
+	"description": "Track note status, priority, and level metadata from a configurable vault dashboard.",
+	"author": "Taha Yiğit Melek",
+	"authorUrl": "https://github.com/tahayigitmelek",
+	"isDesktopOnly": false
+}
