@@ -1,86 +1,25 @@
 # VaultPilot
 
-VaultPilot is an Obsidian plugin for managing note workflow metadata from YAML frontmatter. It scans Markdown notes for `status`, `priority`, and `level`, then gives you a dashboard for filtering, sorting, and quick editing those fields.
-
-## Example frontmatter
-
-```yaml
----
-status: ready-to-start
-priority: P2
-level: L3
----
-```
-
-Notes appear in the VaultPilot Dashboard when they contain at least one supported metadata field. Missing fields can be created from the dashboard or with the **Create Metadata for Current Note** command.
+VaultPilot is an Obsidian plugin for managing note workflow metadata directly from YAML frontmatter. It scans your Markdown notes for status, priority, and level fields, providing a dedicated dashboard for filtering, sorting, and quickly updating your workflow states.
 
 ## Features
 
-- Dedicated **VaultPilot Dashboard** view.
-- Table view with title, status, priority, level, and quick actions.
-- Filters for status, priority, level, folder, text search, completed, not completed, ready-to-start, in-progress, and critical notes.
-- Sorting by priority, level, title, and status order.
-- Quick frontmatter editing from dashboard dropdowns.
-- Commands for setting metadata and opening filtered dashboard views.
-- Ribbon icon for opening the dashboard.
-- Optional rendered-note metadata panel.
-- Configurable values, labels, icons, colors, order, defaults, and folder rules.
-- Theme-friendly CSS badges.
+- Dedicated dashboard: Filter, sort, and manage note workflow states from a central table view.
+- Quick metadata editing: Update status, priority, and level directly from dashboard dropdowns without opening notes.
+- Smart filters: Quickly isolate notes by status, priority, level, folder, text search, or quick filters like ready-to-start and critical.
+- Flexible sorting: Organize your notes by priority, level, title, or custom status order.
+- Rendered-note panel: View and modify workflow metadata through an optional interactive panel at the top of rendered notes.
+- Command Palette integration: Run quick commands to set metadata, mark notes as completed or in progress, and open filtered dashboard views.
+- Fully customizable: Configure custom metadata values, labels, icons, badge colors, display order, defaults, and folder rules from plugin settings.
 
-## Default values
+## Usage
 
-### Status
+- Opening dashboard: Click the ribbon icon on the sidebar or run Open VaultPilot Dashboard from the Command Palette.
+- Editing frontmatter: Change a note's status, priority, or level using the dropdown menus directly in the dashboard table.
+- Using quick commands: Run commands like Set Status, Mark Current Note as In Progress, or Create Metadata for Current Note directly from the active editor.
+- Isolating critical work: Use instant commands like Show Ready-to-Start Notes or Show Critical Notes to jump straight to filtered views.
+- Configuring rules: Open Settings > Community plugins > VaultPilot to customize badge styles, default values, and folder inclusion/exclusion rules.
 
-| Value | Label |
-| --- | --- |
-| `not-set` | No status selected |
-| `ready-to-start` | Ready to start |
-| `in-progress` | In progress |
-| `completed` | Completed |
+## Privacy
 
-### Priority
-
-| Value | Label |
-| --- | --- |
-| `not-set` | No priority selected |
-| `P0` | Low |
-| `P1` | Medium |
-| `P2` | High |
-| `P3` | Critical |
-
-### Level
-
-| Value | Label |
-| --- | --- |
-| `not-set` | No level selected |
-| `L1` | Beginner |
-| `L2` | Intermediate |
-| `L3` | Advanced |
-| `L4` | Expert |
-| `L5` | Master |
-
-## Commands
-
-- **Open VaultPilot Dashboard**
-- **Set Status**
-- **Set Priority**
-- **Set Level**
-- **Mark Current Note as In Progress**
-- **Mark Current Note as Completed**
-- **Create Metadata for Current Note**
-- **Show Ready-to-Start Notes**
-- **Show In-Progress Notes**
-- **Show Critical Notes**
-
-## Settings
-
-Open **Settings → Community plugins → VaultPilot** to configure:
-
-- Dashboard availability
-- Note header panel visibility
-- Badge styling
-- Status, priority, and level values
-- Value labels, icons, colors, and order
-- Default status, priority, and level
-- Include and exclude folders
-- Templates folder handling
+VaultPilot operates entirely locally and offline within your Obsidian vault. It does not make any external network requests or collect telemetry. All metadata and settings are stored locally in your Markdown files and standard Obsidian plugin data.
