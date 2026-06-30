@@ -25,6 +25,7 @@ import type {
 export default class StatusPilotPlugin extends Plugin {
 	settings!: StatusPilotSettings;
 	metadataService!: MetadataService;
+	private readonly pendingMetadataCreations = new Set<string>();
 
 	async onload(): Promise<void> {
 		await this.loadSettings();
@@ -35,13 +36,14 @@ export default class StatusPilotPlugin extends Plugin {
 			(leaf) => new DashboardView(leaf, this),
 		);
 
-		this.addRibbonIcon('list-checks', 'Open dashboard', () => {
+		this.addRibbonIcon('layout-dashboard', 'Status dashboard', () => {
 			void this.openDashboard();
 		});
 
 		registerCommands(this);
 		registerNotePanel(this);
 		this.registerMetadataEvents();
+		this.registerAddStatusEvents();
 		this.addSettingTab(new StatusPilotSettingTab(this.app, this));
 		this.updateBadgeStylingClass();
 
@@ -67,6 +69,7 @@ export default class StatusPilotPlugin extends Plugin {
 		this.metadataService?.setSettings(this.settings);
 		this.updateBadgeStylingClass();
 		this.metadataService?.scheduleRefresh(0);
+		this.ensureMetadataForActiveFile();
 	}
 
 	async openDashboard(preset: DashboardPreset = {}): Promise<void> {
@@ -140,19 +143,34 @@ export default class StatusPilotPlugin extends Plugin {
 		}
 	}
 
-	async createMetadataForFile(file: TFile): Promise<void> {
+	async createMetadataForFile(file: TFile, showNotice = true): Promise<void> {
 		const updates = createDefaultMetadataUpdates(
 			this.settings,
 			this.metadataService.getFileMetadata(file),
 		);
 
 		if (metadataUpdatesAreEmpty(updates)) {
-			new Notice('Metadata already exists.');
+			if (showNotice) {
+				new Notice('Metadata already exists.');
+			}
 			return;
 		}
 
 		await this.updateFileMetadata(file, updates);
-		new Notice('Metadata created.');
+		if (showNotice) {
+			new Notice('Metadata created.');
+		}
+	}
+
+	ensureMetadataForFile(file: TFile): void {
+		if (!this.settings.addStatus || this.pendingMetadataCreations.has(file.path)) {
+			return;
+		}
+
+		this.pendingMetadataCreations.add(file.path);
+		void this.createMetadataForFile(file, false).finally(() => {
+			this.pendingMetadataCreations.delete(file.path);
+		});
 	}
 
 	getReadyStatusValue(): string {
@@ -224,6 +242,30 @@ export default class StatusPilotPlugin extends Plugin {
 				}
 			}),
 		);
+	}
+
+	private registerAddStatusEvents(): void {
+		const ensureMetadata = () => {
+			this.ensureMetadataForActiveFile();
+		};
+
+		this.registerEvent(
+			this.app.workspace.on('active-leaf-change', ensureMetadata),
+		);
+		this.registerEvent(this.app.workspace.on('file-open', ensureMetadata));
+		this.registerEvent(this.app.workspace.on('layout-change', ensureMetadata));
+		ensureMetadata();
+	}
+
+	private ensureMetadataForActiveFile(): void {
+		if (!this.settings.addStatus) {
+			return;
+		}
+
+		const file = this.getActiveMarkdownFile();
+		if (file) {
+			this.ensureMetadataForFile(file);
+		}
 	}
 
 	private findStatusValue(defaultValue: string): string {

@@ -62,13 +62,48 @@ body.statuspilot-active .statuspilot-hidden-properties-container {
 	align-items: end;
 	display: grid;
 	gap: 10px;
-	grid-template-columns: minmax(180px, 2fr) auto repeat(6, minmax(120px, 1fr)) auto;
+	grid-template-columns:
+		minmax(220px, 1.4fr)
+		minmax(360px, 2fr)
+		minmax(260px, 1.2fr);
+}
+
+.statuspilot-toolbar-search,
+.statuspilot-toolbar-group {
+	align-items: end;
+	display: grid;
+	gap: 10px;
+	min-width: 0;
+}
+
+.statuspilot-toolbar-search {
+	grid-template-columns: minmax(180px, 1fr);
+}
+
+.statuspilot-toolbar-metadata {
+	grid-template-columns: repeat(3, minmax(110px, 1fr));
+}
+
+.statuspilot-toolbar-organize {
+	grid-template-columns: repeat(2, minmax(130px, 1fr));
 }
 
 .statuspilot-control {
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
+	min-width: 0;
+}
+
+.statuspilot-search-row {
+	align-items: center;
+	display: flex;
+	gap: 8px;
+	min-width: 0;
+}
+
+.statuspilot-search-row .statuspilot-search {
+	flex: 1 1 auto;
 	min-width: 0;
 }
 
@@ -111,7 +146,6 @@ body.statuspilot-active .statuspilot-hidden-properties-container {
 /* ─── Buttons ─── */
 
 .statuspilot-icon-button,
-.statuspilot-link-button,
 .statuspilot-picker-option {
 	background: transparent;
 	border: 1px solid transparent;
@@ -161,7 +195,6 @@ body.statuspilot-active .statuspilot-hidden-properties-container {
 }
 
 .statuspilot-icon-button:hover,
-.statuspilot-link-button:hover,
 .statuspilot-picker-option:hover {
 	background: var(--background-modifier-hover);
 	border-color: var(--background-modifier-border);
@@ -171,20 +204,28 @@ body.statuspilot-active .statuspilot-hidden-properties-container {
 	transform: scale(0.95);
 }
 
-.statuspilot-link-button {
-	border-radius: 6px;
+.statuspilot-note-link {
 	color: var(--link-color);
+	cursor: pointer;
+	display: inline-block;
 	font-weight: 600;
 	max-width: 220px;
 	overflow-wrap: anywhere;
-	padding: 2px 4px;
 	text-align: left;
+	text-decoration: none;
 }
 
-.statuspilot-link-button:hover {
+.statuspilot-note-link:hover,
+.statuspilot-note-link:focus-visible {
 	color: var(--link-color-hover, var(--link-color));
 	text-decoration: underline;
 	text-underline-offset: 2px;
+}
+
+.statuspilot-note-link:focus-visible {
+	border-radius: 4px;
+	outline: 2px solid var(--interactive-accent);
+	outline-offset: 2px;
 }
 
 /* ─── Card ─── */
@@ -247,14 +288,6 @@ body.statuspilot-active .statuspilot-hidden-properties-container {
 	align-items: center;
 	display: flex;
 	gap: 0;
-}
-
-.statuspilot-actions-cell {
-	white-space: nowrap;
-}
-
-.statuspilot-actions-cell .statuspilot-icon-button + .statuspilot-icon-button {
-	margin-left: 4px;
 }
 
 .statuspilot-action-button {
@@ -663,6 +696,43 @@ body button.statuspilot-badge-button:active {
 
 /* ─── Settings ─── */
 
+.statuspilot-settings {
+	container-type: inline-size;
+	max-width: 100%;
+}
+
+.statuspilot-settings .setting-item {
+	align-items: flex-start;
+	display: flex;
+	gap: 12px 16px;
+}
+
+.statuspilot-settings .setting-item-info {
+	flex: 1 1 220px;
+	min-width: 0;
+}
+
+.statuspilot-settings .setting-item-control {
+	align-items: center;
+	display: flex;
+	flex: 1 1 320px;
+	flex-wrap: wrap;
+	gap: 8px;
+	justify-content: flex-end;
+	min-width: 0;
+}
+
+.statuspilot-settings .setting-item-control input[type='text'],
+.statuspilot-settings .setting-item-control textarea,
+.statuspilot-settings .setting-item-control select {
+	max-width: 100%;
+	min-width: min(220px, 100%);
+}
+
+.statuspilot-settings .setting-item-control textarea {
+	width: min(420px, 100%);
+}
+
 .statuspilot-settings-list {
 	display: grid;
 	gap: 8px;
@@ -686,6 +756,64 @@ body button.statuspilot-badge-button:active {
 	padding: 8px 0;
 }
 
+.statuspilot-settings-option .setting-item-info {
+	flex: 0 1 180px;
+}
+
+.statuspilot-settings-option .setting-item-control {
+	flex: 1 1 460px;
+}
+
+.statuspilot-settings-option .setting-item-control input[type='text'] {
+	flex: 1 1 110px;
+	min-width: 90px;
+}
+
+.statuspilot-settings-option .setting-item-control input[type='color'] {
+	flex: 0 0 auto;
+}
+
+.statuspilot-settings-option .setting-item-control button {
+	flex: 0 0 auto;
+}
+
+@container (max-width: 700px) {
+	.statuspilot-settings .setting-item {
+		align-items: stretch;
+		flex-direction: column;
+	}
+
+	.statuspilot-settings .setting-item-control {
+		justify-content: flex-start;
+		width: 100%;
+	}
+
+	.statuspilot-settings .setting-item-control input[type='text'],
+	.statuspilot-settings .setting-item-control textarea,
+	.statuspilot-settings .setting-item-control select {
+		min-width: 0;
+		width: 100%;
+	}
+
+	.statuspilot-settings-option {
+		padding: 6px 10px;
+	}
+
+	.statuspilot-settings-option .setting-item-control input[type='text'] {
+		flex-basis: calc(50% - 4px);
+	}
+}
+
+@container (max-width: 460px) {
+	.statuspilot-settings-option .setting-item-control input[type='text'] {
+		flex-basis: 100%;
+	}
+
+	.statuspilot-settings-option .setting-item-control {
+		gap: 6px;
+	}
+}
+
 /* ─── Responsive ─── */
 
 @media (max-width: 1200px) {
@@ -694,7 +822,7 @@ body button.statuspilot-badge-button:active {
 	}
 
 	.statuspilot-toolbar {
-		grid-template-columns: repeat(3, minmax(140px, 1fr));
+		grid-template-columns: 1fr;
 	}
 }
 
@@ -712,15 +840,12 @@ body button.statuspilot-badge-button:active {
 
 	.statuspilot-toolbar {
 		gap: 8px;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 
 	.statuspilot-control.wide {
-		grid-column: 1 / -1;
 		min-width: 0;
 	}
 
-	.statuspilot-toolbar > .statuspilot-icon-button,
 	.statuspilot-search-button {
 		align-self: end;
 		justify-self: start;
@@ -730,7 +855,7 @@ body button.statuspilot-badge-button:active {
 		min-width: 620px;
 	}
 
-	.statuspilot-link-button {
+	.statuspilot-note-link {
 		max-width: 180px;
 	}
 }
@@ -744,7 +869,11 @@ body button.statuspilot-badge-button:active {
 		grid-template-columns: 1fr;
 	}
 
-	.statuspilot-toolbar > .statuspilot-icon-button,
+	.statuspilot-toolbar-metadata,
+	.statuspilot-toolbar-organize {
+		grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+	}
+
 	.statuspilot-search-button {
 		justify-self: end;
 	}
@@ -832,18 +961,10 @@ body button.statuspilot-badge-button:active {
 		content: 'Level';
 	}
 
-	.statuspilot-table td:nth-child(5)::before {
-		content: 'Actions';
-	}
-
-	.statuspilot-link-button {
+	.statuspilot-note-link {
 		max-width: 100%;
 		padding-left: 0;
 		width: 100%;
-	}
-
-	.statuspilot-actions-cell {
-		justify-content: space-between;
 	}
 
 	.statuspilot-priority-panel {
@@ -898,6 +1019,10 @@ body button.statuspilot-badge-button:active {
 	.statuspilot-control select,
 	.statuspilot-select {
 		height: 32px;
+	}
+
+	.statuspilot-toolbar-search {
+		grid-template-columns: 1fr;
 	}
 
 	.statuspilot-table tbody tr {
@@ -956,15 +1081,12 @@ body button.statuspilot-badge-button:active {
 
 	.statuspilot-toolbar {
 		gap: 8px;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 
 	.statuspilot-control.wide {
-		grid-column: 1 / -1;
 		min-width: 0;
 	}
 
-	.statuspilot-toolbar > .statuspilot-icon-button,
 	.statuspilot-search-button {
 		align-self: end;
 		justify-self: start;
@@ -974,7 +1096,7 @@ body button.statuspilot-badge-button:active {
 		min-width: 620px;
 	}
 
-	.statuspilot-link-button {
+	.statuspilot-note-link {
 		max-width: 180px;
 	}
 }
@@ -984,7 +1106,11 @@ body button.statuspilot-badge-button:active {
 		grid-template-columns: 1fr;
 	}
 
-	.statuspilot-toolbar > .statuspilot-icon-button,
+	.statuspilot-toolbar-metadata,
+	.statuspilot-toolbar-organize {
+		grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+	}
+
 	.statuspilot-search-button {
 		justify-self: end;
 	}
@@ -1072,18 +1198,10 @@ body button.statuspilot-badge-button:active {
 		content: 'Level';
 	}
 
-	.statuspilot-table td:nth-child(5)::before {
-		content: 'Actions';
-	}
-
-	.statuspilot-link-button {
+	.statuspilot-note-link {
 		max-width: 100%;
 		padding-left: 0;
 		width: 100%;
-	}
-
-	.statuspilot-actions-cell {
-		justify-content: space-between;
 	}
 
 	.statuspilot-cell-edit {
@@ -1093,6 +1211,10 @@ body button.statuspilot-badge-button:active {
 }
 
 @container (max-width: 480px) {
+	.statuspilot-toolbar-search {
+		grid-template-columns: 1fr;
+	}
+
 	.statuspilot-table tbody tr {
 		border-radius: 8px;
 		padding: 7px 9px;
@@ -1180,27 +1302,19 @@ body button.statuspilot-badge-button:active {
 
 	.statuspilot-dashboard .statuspilot-table th:nth-child(1),
 	.statuspilot-dashboard .statuspilot-table td:nth-child(1) {
-		width: 34%;
+		width: 40%;
 	}
 
 	.statuspilot-dashboard .statuspilot-table th:nth-child(2),
-	.statuspilot-dashboard .statuspilot-table td:nth-child(2) {
-		width: 20%;
-	}
-
+	.statuspilot-dashboard .statuspilot-table td:nth-child(2),
 	.statuspilot-dashboard .statuspilot-table th:nth-child(3),
 	.statuspilot-dashboard .statuspilot-table td:nth-child(3),
 	.statuspilot-dashboard .statuspilot-table th:nth-child(4),
 	.statuspilot-dashboard .statuspilot-table td:nth-child(4) {
-		width: 17%;
+		width: 20%;
 	}
 
-	.statuspilot-dashboard .statuspilot-table th:nth-child(5),
-	.statuspilot-dashboard .statuspilot-table td:nth-child(5) {
-		width: 12%;
-	}
-
-	.statuspilot-dashboard .statuspilot-link-button {
+	.statuspilot-dashboard .statuspilot-note-link {
 		max-width: 100%;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -1259,27 +1373,19 @@ body button.statuspilot-badge-button:active {
 
 	.statuspilot-dashboard .statuspilot-table th:nth-child(1),
 	.statuspilot-dashboard .statuspilot-table td:nth-child(1) {
-		width: 34%;
+		width: 40%;
 	}
 
 	.statuspilot-dashboard .statuspilot-table th:nth-child(2),
-	.statuspilot-dashboard .statuspilot-table td:nth-child(2) {
-		width: 20%;
-	}
-
+	.statuspilot-dashboard .statuspilot-table td:nth-child(2),
 	.statuspilot-dashboard .statuspilot-table th:nth-child(3),
 	.statuspilot-dashboard .statuspilot-table td:nth-child(3),
 	.statuspilot-dashboard .statuspilot-table th:nth-child(4),
 	.statuspilot-dashboard .statuspilot-table td:nth-child(4) {
-		width: 17%;
+		width: 20%;
 	}
 
-	.statuspilot-dashboard .statuspilot-table th:nth-child(5),
-	.statuspilot-dashboard .statuspilot-table td:nth-child(5) {
-		width: 12%;
-	}
-
-	.statuspilot-dashboard .statuspilot-link-button {
+	.statuspilot-dashboard .statuspilot-note-link {
 		max-width: 100%;
 		overflow: hidden;
 		text-overflow: ellipsis;

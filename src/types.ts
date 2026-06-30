@@ -16,6 +16,7 @@ export interface StatusPilotSettings {
 	enableDashboard: boolean;
 	enableNotePanel: boolean;
 	enableBadgeStyling: boolean;
+	addStatus: boolean;
 	statusOptions: MetadataOption[];
 	priorityOptions: MetadataOption[];
 	levelOptions: MetadataOption[];
@@ -24,8 +25,6 @@ export interface StatusPilotSettings {
 	defaultLevel: string;
 	includeFolders: string[];
 	excludeFolders: string[];
-	ignoreTemplatesFolder: boolean;
-	templatesFolder: string;
 }
 
 export interface StatusPilotFileMetadata {
@@ -47,14 +46,6 @@ export interface StatusPilotRecord extends StatusPilotFileMetadata {
 
 export type MetadataUpdates = Partial<Record<MetadataKind, string>>;
 
-export type DashboardFocus =
-	| 'all'
-	| 'completed'
-	| 'not-completed'
-	| 'ready'
-	| 'in-progress'
-	| 'critical';
-
 export type DashboardSort =
 	| 'priority-desc'
 	| 'priority-asc'
@@ -69,7 +60,6 @@ export interface DashboardFilters {
 	priority: string;
 	level: string;
 	folder: string;
-	focus: DashboardFocus;
 	sort: DashboardSort;
 }
 

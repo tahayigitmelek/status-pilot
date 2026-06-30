@@ -3,6 +3,8 @@ import type StatusPilotPlugin from '../main';
 import { createBadge } from '../ui/components';
 import type { MetadataKind, MetadataOption, MetadataUpdates } from '../types';
 
+const NOT_SET_VALUE = 'not-set';
+
 export function registerCommands(plugin: StatusPilotPlugin): void {
 	plugin.addCommand({
 		id: 'open-statuspilot-dashboard',
@@ -51,10 +53,22 @@ export function registerCommands(plugin: StatusPilotPlugin): void {
 	});
 
 	plugin.addCommand({
+		id: 'set-current-note-metadata-not-set',
+		name: 'Set current note metadata to not-set',
+		callback: () => {
+			void plugin.updateActiveFileMetadata({
+				status: NOT_SET_VALUE,
+				priority: NOT_SET_VALUE,
+				level: NOT_SET_VALUE,
+			});
+		},
+	});
+
+	plugin.addCommand({
 		id: 'show-ready-to-start-notes',
 		name: 'Show ready-to-start notes',
 		callback: () => {
-			void plugin.openDashboard({ focus: 'ready' });
+			void plugin.openDashboard({ status: plugin.getReadyStatusValue() });
 		},
 	});
 
@@ -62,7 +76,7 @@ export function registerCommands(plugin: StatusPilotPlugin): void {
 		id: 'show-in-progress-notes',
 		name: 'Show in-progress notes',
 		callback: () => {
-			void plugin.openDashboard({ focus: 'in-progress' });
+			void plugin.openDashboard({ status: plugin.getInProgressStatusValue() });
 		},
 	});
 
@@ -70,7 +84,7 @@ export function registerCommands(plugin: StatusPilotPlugin): void {
 		id: 'show-critical-notes',
 		name: 'Show critical notes',
 		callback: () => {
-			void plugin.openDashboard({ focus: 'critical' });
+			void plugin.openDashboard({ priority: plugin.getCriticalPriorityValue() });
 		},
 	});
 }

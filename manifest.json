@@ -1,7 +1,7 @@
 {
 	"id": "status-pilot",
 	"name": "Status Pilot",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"minAppVersion": "1.11.4",
 	"description": "Track note status, priority, and level metadata from a configurable vault dashboard.",
 	"author": "Taha Yiğit Melek",

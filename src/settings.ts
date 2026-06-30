@@ -24,9 +24,11 @@ const DEFAULT_KEYS: Record<
 	level: 'defaultLevel',
 };
 
+const NOT_SET_VALUE = 'not-set';
+
 const FALLBACK_OPTION: MetadataOption = {
 	id: 'fallback',
-	value: 'not-set',
+	value: NOT_SET_VALUE,
 	label: 'Not set',
 	color: '#8a8f98',
 	icon: '○',
@@ -36,7 +38,7 @@ export const DEFAULT_STATUS_OPTIONS: MetadataOption[] = [
 	{
 		id: 'status-not-set',
 		value: 'not-set',
-		label: 'No status selected',
+		label: 'Not selected',
 		color: '#8a8f98',
 		icon: '○',
 	},
@@ -67,7 +69,7 @@ export const DEFAULT_PRIORITY_OPTIONS: MetadataOption[] = [
 	{
 		id: 'priority-not-set',
 		value: 'not-set',
-		label: 'No priority selected',
+		label: 'Not selected',
 		color: '#8a8f98',
 		icon: '○',
 	},
@@ -105,7 +107,7 @@ export const DEFAULT_LEVEL_OPTIONS: MetadataOption[] = [
 	{
 		id: 'level-not-set',
 		value: 'not-set',
-		label: 'No level selected',
+		label: 'Not selected',
 		color: '#8a8f98',
 		icon: '○',
 	},
@@ -150,6 +152,7 @@ export const DEFAULT_SETTINGS: StatusPilotSettings = {
 	enableDashboard: true,
 	enableNotePanel: true,
 	enableBadgeStyling: true,
+	addStatus: false,
 	statusOptions: cloneOptions(DEFAULT_STATUS_OPTIONS),
 	priorityOptions: cloneOptions(DEFAULT_PRIORITY_OPTIONS),
 	levelOptions: cloneOptions(DEFAULT_LEVEL_OPTIONS),
@@ -158,8 +161,6 @@ export const DEFAULT_SETTINGS: StatusPilotSettings = {
 	defaultLevel: 'not-set',
 	includeFolders: [],
 	excludeFolders: [],
-	ignoreTemplatesFolder: true,
-	templatesFolder: 'Templates',
 };
 
 export function normalizeSettings(
@@ -180,6 +181,7 @@ export function normalizeSettings(
 		enableNotePanel: data?.enableNotePanel ?? DEFAULT_SETTINGS.enableNotePanel,
 		enableBadgeStyling:
 			data?.enableBadgeStyling ?? DEFAULT_SETTINGS.enableBadgeStyling,
+		addStatus: data?.addStatus ?? DEFAULT_SETTINGS.addStatus,
 		statusOptions,
 		priorityOptions,
 		levelOptions,
@@ -200,13 +202,6 @@ export function normalizeSettings(
 		),
 		includeFolders: normalizeFolderList(data?.includeFolders),
 		excludeFolders: normalizeFolderList(data?.excludeFolders),
-		ignoreTemplatesFolder:
-			data?.ignoreTemplatesFolder ?? DEFAULT_SETTINGS.ignoreTemplatesFolder,
-		templatesFolder:
-			typeof data?.templatesFolder === 'string' &&
-			data.templatesFolder.trim().length > 0
-				? data.templatesFolder.trim()
-				: DEFAULT_SETTINGS.templatesFolder,
 	};
 }
 
@@ -359,6 +354,20 @@ export class StatusPilotSettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					}),
 			);
+
+		new Setting(containerEl)
+			.setName('Add status')
+			.setDesc(
+				'Automatically add missing status, priority, and level metadata with default values when a note is opened.',
+			)
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.addStatus)
+					.onChange(async (value) => {
+						this.plugin.settings.addStatus = value;
+						await this.plugin.saveSettings();
+					}),
+			);
 	}
 
 	private renderDefaultSettings(containerEl: HTMLElement): void {
@@ -418,30 +427,6 @@ export class StatusPilotSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.excludeFolders.join('\n'))
 					.onChange(async (value) => {
 						this.plugin.settings.excludeFolders = splitFolders(value);
-						await this.plugin.saveSettings();
-					}),
-			);
-
-		new Setting(containerEl)
-			.setName('Ignore templates folder')
-			.setDesc('Hide notes from the configured templates folder.')
-			.addToggle((toggle) =>
-				toggle
-					.setValue(this.plugin.settings.ignoreTemplatesFolder)
-					.onChange(async (value) => {
-						this.plugin.settings.ignoreTemplatesFolder = value;
-						await this.plugin.saveSettings();
-					}),
-			);
-
-		new Setting(containerEl)
-			.setName('Templates folder')
-			.addText((text) =>
-				text
-					.setPlaceholder('Templates')
-					.setValue(this.plugin.settings.templatesFolder)
-					.onChange(async (value) => {
-						this.plugin.settings.templatesFolder = cleanFolder(value);
 						await this.plugin.saveSettings();
 					}),
 			);

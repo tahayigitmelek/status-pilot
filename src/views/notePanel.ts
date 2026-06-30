@@ -1,5 +1,6 @@
 import { MarkdownView, Menu, TFile } from 'obsidian';
 import type StatusPilotPlugin from '../main';
+import { hasAnyMetadata } from '../metadata/metadataService';
 import { createBadge, formatOptionLabel } from '../ui/components';
 import type { MetadataKind, MetadataOption } from '../types';
 
@@ -58,6 +59,20 @@ function refreshInlineNotePanels(plugin: StatusPilotPlugin): void {
 		if (!(file instanceof TFile) || file.extension !== 'md') {
 			removeInlinePanel(view.contentEl);
 			continue;
+		}
+
+		const metadata = plugin.metadataService.getFileMetadata(file);
+		if (!hasAnyMetadata(metadata)) {
+			if (plugin.settings.addStatus) {
+				plugin.ensureMetadataForFile(file);
+			}
+			removeInlinePanel(view.contentEl);
+			syncPropertiesVisibility(view.contentEl);
+			continue;
+		}
+
+		if (plugin.settings.addStatus && hasMissingMetadata(metadata)) {
+			plugin.ensureMetadataForFile(file);
 		}
 
 		const panelEl = ensureInlinePanel(view);
@@ -160,9 +175,16 @@ function renderNotePanel(
 	const controlsEl = containerEl.createDiv({
 		cls: 'statuspilot-note-panel-controls',
 	});
-	renderPriorityControl(plugin, controlsEl, file);
-	renderPanelControl(plugin, controlsEl, file, 'status', 'Status');
-	renderPanelControl(plugin, controlsEl, file, 'level', 'Level');
+	const metadata = plugin.metadataService.getFileMetadata(file);
+	if (metadata.hasPriority) {
+		renderPriorityControl(plugin, controlsEl, file);
+	}
+	if (metadata.hasStatus) {
+		renderPanelControl(plugin, controlsEl, file, 'status', 'Status');
+	}
+	if (metadata.hasLevel) {
+		renderPanelControl(plugin, controlsEl, file, 'level', 'Level');
+	}
 }
 
 function renderPriorityControl(
@@ -191,6 +213,14 @@ function renderPriorityControl(
 		plugin.metadataService.getOptions('priority'),
 		value,
 	);
+}
+
+function hasMissingMetadata(metadata: {
+	hasStatus: boolean;
+	hasPriority: boolean;
+	hasLevel: boolean;
+}): boolean {
+	return !metadata.hasStatus || !metadata.hasPriority || !metadata.hasLevel;
 }
 
 function renderPanelControl(

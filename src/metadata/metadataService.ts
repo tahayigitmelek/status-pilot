@@ -48,6 +48,14 @@ export class MetadataService {
 			};
 		}
 
+		return this.readFileMetadata(file);
+	}
+
+	getFreshFileMetadata(file: TFile): StatusPilotFileMetadata {
+		return this.readFileMetadata(file);
+	}
+
+	private readFileMetadata(file: TFile): StatusPilotFileMetadata {
 		const frontmatter = this.app.metadataCache.getFileCache(file)?.frontmatter;
 		const hasStatus = hasOwn(frontmatter, 'status');
 		const hasPriority = hasOwn(frontmatter, 'priority');
@@ -198,7 +206,10 @@ export class MetadataService {
 	}
 
 	private createRecord(file: TFile): StatusPilotRecord | null {
-		const metadata = this.getFileMetadata(file);
+		const metadata = this.getFreshFileMetadata(file);
+		if (!hasAnyMetadata(metadata)) {
+			return null;
+		}
 
 		return this.createRecordFromMetadata(file, metadata);
 	}
@@ -223,13 +234,6 @@ export class MetadataService {
 		}
 
 		if (
-			this.settings.ignoreTemplatesFolder &&
-			pathMatchesFolder(file.path, this.settings.templatesFolder)
-		) {
-			return false;
-		}
-
-		if (
 			this.settings.includeFolders.length > 0 &&
 			!this.settings.includeFolders.some((folder) =>
 				pathMatchesFolder(file.path, folder),
@@ -248,6 +252,10 @@ export class MetadataService {
 			listener();
 		}
 	}
+}
+
+export function hasAnyMetadata(metadata: StatusPilotFileMetadata): boolean {
+	return metadata.hasStatus || metadata.hasPriority || metadata.hasLevel;
 }
 
 function stringifyFrontmatterValue(value: unknown, fallback: string): string {
